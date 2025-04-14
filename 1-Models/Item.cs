@@ -1,6 +1,6 @@
 class Item{
 
-    Guid Barcode = Guid.NewGuid();
+    Guid Id = Guid.NewGuid();
     public string Category = string.Empty;
 
     public string Name = string.Empty;
@@ -8,6 +8,7 @@ class Item{
 
     public double Price = 0.00;
 
+    public Item(){}
 
 
 

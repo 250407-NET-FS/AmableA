@@ -2,9 +2,9 @@ namespace Project1.Models;
 public class Employee
 {
 
-    public Guid EGuid { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; } = Guid.NewGuid();
     public string FName { get; set; } = string.Empty;
-    public string MName { get; set; } = string.Empty;
+    public string? MName { get; set; }
     public string LName { get; set; } = string.Empty;
 
     public string Address { get; set; } = string.Empty;
@@ -13,8 +13,8 @@ public class Employee
     //One to one, not null
     public Store Store;
 
-
-    public Employee(string phone, string address, Store store, string fName, string lName, string mName = null)
+    public Employee() {}
+    public Employee(string phone, string address, Store store, string fName, string lName, string? mName = null)
     {
 
         if (store == null)
@@ -22,7 +22,6 @@ public class Employee
             throw new ArgumentNullException(nameof(store), "Store cannot be null.");
         }
 
-        Id = id;
         PhoneNumber = phone;
         FName = fName;
         MName = mName;
