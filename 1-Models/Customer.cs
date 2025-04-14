@@ -14,8 +14,7 @@ public class Customer{
         PhoneNumber = phone;
 
     }
-    //n to n
-    public List<Store> Stores  { get; set;} = new List<Store>();
+
 
 
 }

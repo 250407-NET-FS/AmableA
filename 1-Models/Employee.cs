@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Project1.Models;
 public class Employee
 {
@@ -11,6 +13,7 @@ public class Employee
 
     public string PhoneNumber { get; set; } = string.Empty;
     //One to one, not null
+    [Required]
     public Store Store;
 
     public Employee() {}
