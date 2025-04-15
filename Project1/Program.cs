@@ -1,7 +1,8 @@
 using Project1.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing.Text;
 using Project1.Repositories;
+using Project1.DTOs;
+
 
 
 
@@ -27,6 +28,8 @@ builder.Services.AddOpenApiDocument(config =>
 
 //Dependecy Injection Area
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<IStoreRepository, StoreRepository>();
+builder.Services.AddScoped<IVisitRepository, VisitRepository>();
 
 
 
@@ -57,35 +60,340 @@ app.MapGet("/", () => "Hello World!");
 
 
 
-
-app.MapPost("/customer", async (ICustomerRepository customerRepository , Customer customer) => {
+//--Start Customer
+app.MapPost("/customer", async (ICustomerRepository customerRepository, Customer customer) =>
+{
 
     var persistedCustomer = await customerRepository.PostCustomer(customer);
 
-    return Results.Created($"/customer/{persistedCustomer.Id}", persistedCustomer);
+
+
+    if (persistedCustomer != null)
+    {
+        CustomerDTO customerDto = new CustomerDTO
+        {
+            Id = persistedCustomer.Id,
+            FName = persistedCustomer.FName,
+            MName = persistedCustomer.MName,
+            LName = persistedCustomer.LName,
+            PhoneNumber = persistedCustomer.PhoneNumber
+        };
+        return Results.Created($"/customer/{customerDto.Id}", customerDto);
+    }
+    else
+    {
+        return Results.BadRequest($"Creation Failed");
+    }
+
+});
+
+app.MapPost("/customers", async (ICustomerRepository customerRepository, List<Customer> customers) =>
+{
+
+    var persistedCustomers = await customerRepository.PostListOfCustomer(customers);
+
+
+    var customerDtos = persistedCustomers.Select(c => new CustomerDTO
+    {
+        Id = c.Id,
+        FName = c.FName,
+        MName = c.MName,
+        LName = c.LName,
+        PhoneNumber = c.PhoneNumber
+    }).ToList();
+
+
+    //using this so that i can use the item on the result
+    var firstCustomer = customerDtos.FirstOrDefault();
+
+
+    return firstCustomer != null
+    ? Results.Created($"/customer/{firstCustomer.Id}", firstCustomer)
+    : Results.BadRequest($"Creation Failed");
+
 });
 
 
 
 app.MapGet("/customer/{id}", async (ICustomerRepository customerRepository, string id) =>
-{   
+{
 
     //https://learn.microsoft.com/en-us/dotnet/api/system.guid.tryparse?view=net-9.0
-    if (!Guid.TryParse(id, out var parseId)){
+    if (!Guid.TryParse(id, out var parseId))
+    {
         return Results.BadRequest("Not a valid GUID.");
     }
-    
+
     var obtainedCustomer = await customerRepository.GetCustomer(parseId);
-    
-    if (obtainedCustomer is null){
+
+    if (obtainedCustomer != null)
+    {
+        CustomerDTO customerDto = new CustomerDTO
+        {
+            Id = obtainedCustomer.Id,
+            FName = obtainedCustomer.FName,
+            MName = obtainedCustomer.MName,
+            LName = obtainedCustomer.LName,
+            PhoneNumber = obtainedCustomer.PhoneNumber
+        };
+        return Results.Ok(customerDto);
+    }
+    else
+    {
         return Results.NotFound($"No customer was found with Id: {id}");
     }
-    
-    return Results.Ok(obtainedCustomer);
+
 
 
 });
 
+
+app.MapGet("/customer", async (ICustomerRepository customerRepository) =>
+{
+
+    var listOfCustomers = await customerRepository.GetAllCustomers();
+
+    var customerDtos = listOfCustomers.Select(c => new CustomerDTO
+    {
+        Id = c.Id,
+        FName = c.FName,
+        MName = c.MName,
+        LName = c.LName,
+        PhoneNumber = c.PhoneNumber
+    }).ToList();
+
+    return customerDtos.Count != 0 ? Results.Ok(customerDtos) : Results.NoContent();
+
+});
+//End--Customer
+
+
+
+//Start---Store
+app.MapPost("/store", async (IStoreRepository storeRepository, Store store) =>
+{
+
+    var persistedStore = await storeRepository.PostStore(store);
+
+    if (persistedStore != null)
+    {
+        StoreDTO storeDto = new StoreDTO
+        {
+            StoreNumber = persistedStore.StoreNumber,
+            Address = persistedStore.Address,
+            PhoneNumber = persistedStore.PhoneNumber,
+
+        };
+        return Results.Created($"/customer/{storeDto.StoreNumber}", storeDto);
+    }
+    else
+    {
+        return Results.BadRequest($"Creation Failed");
+    }
+
+});
+
+app.MapPost("/stores", async (IStoreRepository storeRepository, List<Store> stores) =>
+{
+
+    var persistedStore = await storeRepository.PostListOfStore(stores);
+
+    var storeDtos = persistedStore.Select(s => new StoreDTO
+    {
+        StoreNumber = s.StoreNumber,
+        Address = s.Address,
+        PhoneNumber = s.PhoneNumber,
+    }).ToList();
+
+
+    var firstStore = persistedStore.FirstOrDefault();
+
+    return firstStore != null
+    ? Results.Created($"/store/{firstStore.StoreNumber}", firstStore)
+    : Results.BadRequest($"Creation Failed");
+});
+
+
+app.MapGet("/store/{id}", async (IStoreRepository storeRepository, int id) =>
+{
+
+    var obtainedStore = await storeRepository.GetStore(id);
+
+    if (obtainedStore != null)
+    {
+        StoreDTO storeDto = new StoreDTO
+        {
+            StoreNumber = obtainedStore.StoreNumber,
+            Address = obtainedStore.Address,
+            PhoneNumber = obtainedStore.PhoneNumber,
+
+        };
+        return Results.Ok(storeDto);
+    }
+    else
+    {
+        return Results.NotFound($"No store was found with Id: {id}");
+    }
+
+});
+
+
+app.MapGet("/store", async (IStoreRepository storeRepository) =>
+{
+
+    var listOfStores = await storeRepository.GetAllStores();
+
+    var storeDtos = listOfStores.Select(s => new StoreDTO
+    {
+        StoreNumber = s.StoreNumber,
+        Address = s.Address,
+        PhoneNumber = s.PhoneNumber,
+    }).ToList();
+
+    return storeDtos.Count != 0 ? Results.Ok(listOfStores) : Results.NoContent();
+
+});
+//----End Store
+
+//Start -- Visits
+app.MapPost("/visit", async (IVisitRepository visitRepository, Visit visit) =>
+{
+    var persistedVisit = await visitRepository.PostVisit(visit);
+
+    if (persistedVisit != null)
+    {
+        VisitDTO visitDto = new VisitDTO
+        {
+            Id = persistedVisit.Id,
+            CustomerId = persistedVisit.CustomerId,
+            StoreId = persistedVisit.StoreId,
+            VisitDate = persistedVisit.VisitDate,
+            PointsAccumulated = persistedVisit.PointsAccumulated,
+
+        };
+        return Results.Created($"/customer/{visitDto.Id}", visitDto);
+    }
+    else
+    {
+        return Results.BadRequest($"Creation Failed");
+    }
+
+});
+
+app.MapPost("/visits", async (IVisitRepository visitRepository, List<Visit> visits) =>
+{
+
+    var persistedVisit = await visitRepository.PostListOfVisits(visits);
+
+    var storeDtos = persistedVisit.Select(v => new VisitDTO
+    {
+        Id = v.Id,
+        CustomerId = v.CustomerId,
+        StoreId = v.StoreId,
+        VisitDate = v.VisitDate,
+        PointsAccumulated = v.PointsAccumulated,
+    }).ToList();
+
+    var firstVisit = persistedVisit.FirstOrDefault();
+
+    return firstVisit != null
+    ? Results.Created($"/store/{firstVisit.Id}", firstVisit)
+    : Results.BadRequest($"Creation Failed");
+});
+
+app.MapGet("/visit/{id}", async (IVisitRepository visitRepository, string id) =>
+{
+    if (!Guid.TryParse(id, out var parseId))
+    {
+        return Results.BadRequest("Not a valid GUID.");
+    }
+
+    var obtainedVisit = await visitRepository.GetVisit(parseId);
+
+    if (obtainedVisit != null)
+    {
+        VisitDTO visitDto = new VisitDTO
+        {
+            Id = obtainedVisit.Id,
+            CustomerId = obtainedVisit.CustomerId,
+            StoreId = obtainedVisit.StoreId,
+            VisitDate = obtainedVisit.VisitDate,
+            PointsAccumulated = obtainedVisit.PointsAccumulated,
+
+        };
+        return Results.Ok(visitDto);
+    }
+    else
+    {
+        return Results.NoContent();
+    }
+
+});
+
+app.MapGet("/visit", async (IVisitRepository visitRepository) =>
+{
+
+    var listOfVisits = await visitRepository.GetAllVisits();
+
+    var storeDtos = listOfVisits.Select(v => new VisitDTO
+    {
+        Id = v.Id,
+        CustomerId = v.CustomerId,
+        StoreId = v.StoreId,
+        VisitDate = v.VisitDate,
+        PointsAccumulated = v.PointsAccumulated,
+    }).ToList();
+
+    return storeDtos.Count != 0 ? Results.Ok(storeDtos) : Results.NoContent();
+
+});
+
+app.MapGet("/visit_by_customer/{id}", async (IVisitRepository visitRepository, string id) =>
+{
+    if (!Guid.TryParse(id, out var parseId))
+    {
+        return Results.BadRequest("Not a valid GUID.");
+    }
+
+    var obtainedVisit = await visitRepository.GetAllVisitsByCustomerId(parseId);
+
+
+    var storeDtos = obtainedVisit.Select(v => new VisitDTO
+    {
+        Id = v.Id,
+        CustomerId = v.CustomerId,
+        StoreId = v.StoreId,
+        VisitDate = v.VisitDate,
+        PointsAccumulated = v.PointsAccumulated,
+    }).ToList();
+
+    return storeDtos != null
+    ? Results.Ok(storeDtos)
+    : Results.NotFound($"No visit was found with Id: {id}");
+});
+
+app.MapGet("/visit_by_store/{id}", async (IVisitRepository visitRepository, int id) =>
+{
+
+
+    var obtainedVisit = await visitRepository.GetAllVisitsByStoreId(id);
+
+    var storeDtos = obtainedVisit.Select(v => new VisitDTO
+    {
+        Id = v.Id,
+        CustomerId = v.CustomerId,
+        StoreId = v.StoreId,
+        VisitDate = v.VisitDate,
+        PointsAccumulated = v.PointsAccumulated,
+    }).ToList();
+
+    return storeDtos != null
+    ? Results.Ok(storeDtos)
+    : Results.NotFound($"No visit was found with Id: {id}");
+
+});
+
+//End Visits
 
 
 

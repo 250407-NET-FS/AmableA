@@ -69,6 +69,7 @@ public class CustomerTest
         _mockRepository.Setup(r => r.GetCustomer(invalidId)).ReturnsAsync((Customer)null);
 
         // Act
+        
         var retrievedCustomer = await _mockRepository.Object.GetCustomer(validCustomer.Id);
 
         // Assert

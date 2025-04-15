@@ -1,10 +1,13 @@
-using Microsoft.AspNetCore.Mvc;
 using Project1.Models;
-using Project1.Repositories;
+
 
 public interface ICustomerRepository
 {
     Task<Customer> PostCustomer(Customer toAdd);
-    Task<Customer> GetCustomer(Guid id);
+    Task<List<Customer>> PostListOfCustomer(List<Customer> customers);
+    Task<Customer?> GetCustomer(Guid id);
 
+    Task<List<Customer>> GetAllCustomers();
+
+    
 }
