@@ -5,7 +5,7 @@ public class Store
 {
     //Unique id is based on Company + Number
     [Key]
-    public int StoreNumber { get; set; }
+    public required int StoreNumber { get; set; }
     public string? Address { get; set; }
 
     public string? PhoneNumber { get; set; }
@@ -15,7 +15,6 @@ public class Store
     public Store() { }
     public Store(int number, string address, string phone)
     {
-
 
         StoreNumber = number;
         Address = address;

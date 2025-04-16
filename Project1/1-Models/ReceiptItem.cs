@@ -7,7 +7,7 @@ public class ReceiptItem
 {
     
 
-    //Since this is a weak entity ill need the foreign keys I want it to make ReceiptGuid and Item name the keys
+    //Since this is a weak entity ill need the foreign keys I want it to make ReceiptGuid and Itemname the keys
     // https://learn.microsoft.com/en-us/ef/core/modeling/relationships/foreign-and-principal-keys
 
     

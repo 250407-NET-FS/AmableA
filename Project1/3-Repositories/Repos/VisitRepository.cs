@@ -47,12 +47,8 @@ public class VisitRepository : IVisitRepository
         .ToListAsync();
     }
 
-    public async Task<List<Visit>> GetAllVisitsByStoreId(int id)
+    public Task<List<Visit>> GetAllVisitsByStoreId(int id)
     {
-        return await _context.Visits
-        .Where(s => s.StoreId == id)
-        .ToListAsync();
+        throw new NotImplementedException();
     }
-
-
 }

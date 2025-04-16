@@ -43,8 +43,4 @@ public class CustomerRepository : ICustomerRepository
         return await _context.Customers.ToListAsync();
     }
 
-    public Task<List<Store>> PostListOfStore(List<Store> stores)
-    {
-        throw new NotImplementedException();
-    }
 }

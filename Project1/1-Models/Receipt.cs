@@ -1,6 +1,4 @@
-using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
-using Project1.Models;
 
 public class Receipt
 {
@@ -10,7 +8,7 @@ public class Receipt
     public Guid Id { get; set; } = Guid.NewGuid();
 
 
-    public Guid VisitId { get; set; }
+    public required Guid VisitId { get; set; }
     public Visit Visit { get; set; }
 
 

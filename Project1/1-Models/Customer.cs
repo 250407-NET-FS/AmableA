@@ -6,8 +6,8 @@ public class Customer{
     public string? LName { get; set;}
     public string? PhoneNumber {get; set;}
 
-    public int LoyaltyPoints;
-    public LoyaltyStatus Status;
+    public int LoyaltyPoints {get; set;} = 0;
+    public LoyaltyStatus Status {get; set;}= LoyaltyStatus.Wood;
     //Todo calculate loyalty status based on the amount spent in purchases
 
     public Customer(){}
