@@ -1,7 +1,8 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+
+
+namespace Project1.Models;
 
 public class ReceiptItem
 {
@@ -13,17 +14,19 @@ public class ReceiptItem
     
 
     public required string ItemName { get; set; }
-    public required Guid ReceiptId { get; set; }
-    public required Receipt Receipt { get; set; }
+    public Guid? ReceiptId { get; set; }
+    
+    [JsonIgnore] //otherwise it causes circular error
+    public Receipt? Receipt { get; set; }
 
     
 
     [Precision(18,2)]
-    public decimal Price { get; set; }
+    public decimal? Price { get; set; }
 
-    public int Quantity { get; set; }
+    public int? Quantity { get; set; }
 
-    public ReceiptItem(){}
+    public ReceiptItem(){} 
 
 
 

@@ -21,15 +21,6 @@ public class ReceiptRepository : IReceiptRepository
         return receipt;
     }
 
-    public async Task<Receipt> PostReceipt(Receipt receipt, List<ReceiptItem> receiptItems)
-    {
-        receipt.ReceiptItem = receiptItems;
-
-        _context.Receipts.Add(receipt);
-        await _context.SaveChangesAsync();
-
-        return receipt;
-    }
 
     public async Task<List<Receipt>> PostListOfReceipt(List<Receipt> receipts)
     {

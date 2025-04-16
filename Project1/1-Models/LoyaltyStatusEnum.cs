@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace Project1.Models;
 public enum LoyaltyStatus
 {

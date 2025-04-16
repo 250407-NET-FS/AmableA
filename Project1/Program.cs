@@ -30,6 +30,8 @@ builder.Services.AddOpenApiDocument(config =>
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<IStoreRepository, StoreRepository>();
 builder.Services.AddScoped<IVisitRepository, VisitRepository>();
+builder.Services.AddScoped<IReceiptRepository, ReceiptRepository>();
+builder.Services.AddScoped<IReceiptItemRepository, ReceiptItemRepository>();
 
 
 
@@ -76,7 +78,8 @@ app.MapPost("/customer", async (ICustomerRepository customerRepository, Customer
             FName = persistedCustomer.FName,
             MName = persistedCustomer.MName,
             LName = persistedCustomer.LName,
-            PhoneNumber = persistedCustomer.PhoneNumber
+            PhoneNumber = persistedCustomer.PhoneNumber,
+            LoyaltyStatus = persistedCustomer.Status
         };
         return Results.Created($"/customer/{customerDto.Id}", customerDto);
     }
@@ -395,7 +398,96 @@ app.MapGet("/visit_by_store/{id}", async (IVisitRepository visitRepository, int 
 
 //End Visits
 
+//Start Receipts
 
+//Single receipt with possibility of many items, so... a normal receipt 
+//Is it ok to be calling two different methods in the if case?
+app.MapPost("/receipt", async (IReceiptRepository receiptRepository, IReceiptItemRepository receiptItemRepository, Receipt receipt) =>
+{
+
+    if (receipt.ReceiptItem.Count > 0)
+    {
+        //List<ReceiptItem> items = receipt.ReceiptItem;
+        //This creates a shallow copy and the clear later will clear it and thus it will be an empty list 
+        //So i need to make a deep copy... 2 hours cause i forgot such a simplething....
+
+        List<ReceiptItem> items = receipt.ReceiptItem
+        .Select(item => new ReceiptItem
+        {
+            ItemName = item.ItemName,
+            Price = item.Price,
+            Quantity = item.Quantity,
+            ReceiptId = item.ReceiptId
+        }).ToList();
+
+
+        receipt.ReceiptItem.Clear(); //making it empty so that I can add them separetly
+
+        var persistedReceipt = await receiptRepository.PostReceipt(receipt);
+
+        if (persistedReceipt != null)
+        {
+
+
+            var persistedReceiptItem = await receiptItemRepository.PostReceiptItem(persistedReceipt.Id, items);
+
+
+            var receiptItemDTOs = items.Select(r => new ReceiptItemDTO
+            {
+                ItemName = r.ItemName,
+                Price = r.Price,
+                Quantity = r.Quantity,
+            }).ToList();
+
+
+
+            ReceiptDTO receiptDTO = new ReceiptDTO
+            {
+                Id = persistedReceipt.Id,
+                VisitId = persistedReceipt.VisitId,
+                ReceiptItemDTOs = receiptItemDTOs,
+                TotalAmount = persistedReceipt.TotalAmount
+
+            };
+
+            return Results.Created($"/receipt/{receiptDTO.Id}", receiptDTO);
+        }
+        else
+        {
+            return Results.BadRequest($"Creation Failed");
+        }
+
+    }
+    else
+    {
+        var persistedReceipt = await receiptRepository.PostReceipt(receipt);
+
+        ReceiptDTO receiptDTO = new ReceiptDTO
+        {
+            Id = persistedReceipt.Id,
+            VisitId = persistedReceipt.VisitId,
+            TotalAmount = persistedReceipt.TotalAmount
+        };
+
+        if (receiptDTO != null)
+        {
+            return Results.Created($"/receipt/{receiptDTO.Id}", receiptDTO);
+        }
+        else
+        {
+            return Results.BadRequest($"Creation Failed");
+        }
+    }
+});
+
+
+
+
+
+
+
+
+//End Receipts
 
 
 

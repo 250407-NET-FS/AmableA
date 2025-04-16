@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Project1.Models;
 
 namespace Project1.Repositories;
 public class VisitRepository : IVisitRepository

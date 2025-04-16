@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-
+namespace Project1.Models;
 public class Receipt
 {
 
 
-
+    //One Visit can have many receipts
     public Guid Id { get; set; } = Guid.NewGuid();
 
 
@@ -26,7 +26,7 @@ public class Receipt
 
 
 
-    public List<ReceiptItem> ReceiptItem { get; set; } = [];
+    public List<ReceiptItem> ReceiptItem { get; set; } = new List<ReceiptItem>();
 
 }
 

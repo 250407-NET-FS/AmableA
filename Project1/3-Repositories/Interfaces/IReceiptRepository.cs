@@ -1,6 +1,8 @@
+using Project1.Models;
+
 public interface IReceiptRepository{
     Task<Receipt> PostReceipt(Receipt receipt);
-    Task<Receipt> PostReceipt(Receipt receipt, List<ReceiptItem> receiptItems);
+    
 
     Task<List<Receipt>> PostListOfReceipt(List<Receipt> receipts);
 

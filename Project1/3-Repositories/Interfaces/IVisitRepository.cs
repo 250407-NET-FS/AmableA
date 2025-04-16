@@ -1,3 +1,4 @@
+using Project1.Models;
 public interface IVisitRepository{
 
     Task<Visit> PostVisit(Visit visit);
