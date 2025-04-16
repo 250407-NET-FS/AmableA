@@ -1,28 +1,27 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 public class ReceiptItem
 {
     
 
-    //Since this is a weak entity ill need the foreign keys 
+    //Since this is a weak entity ill need the foreign keys I want it to make ReceiptGuid and Item name the keys
     // https://learn.microsoft.com/en-us/ef/core/modeling/relationships/foreign-and-principal-keys
-    [Key]
-    public Guid Id { get; set; }= Guid.NewGuid();
 
-    [Required]
-    public Guid ReceiptGuid;
     
 
-    public required Receipt Receipt;
+    public required string ItemName { get; set; }
+    public required Guid ReceiptId { get; set; }
+    public required Receipt Receipt { get; set; }
 
-    public string? ItemName;
+    
 
     [Precision(18,2)]
-    public decimal Price;
+    public decimal Price { get; set; }
 
-    public int Quantity;
+    public int Quantity { get; set; }
 
     public ReceiptItem(){}
 

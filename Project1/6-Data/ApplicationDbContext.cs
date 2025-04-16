@@ -29,5 +29,20 @@ public class ApplicationDbContext : DbContext
 
     // FluentApi since im using foreign keys 
     // https://learn.microsoft.com/en-us/ef/core/modeling/relationships/foreign-and-principal-keys
+     protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+
+        //One receipt can have many items, key complex key being ReceiptID and Item name
+        modelBuilder.Entity<ReceiptItem>()
+            .HasKey(r => new { r.ReceiptId, r.ItemName }); 
+
+        modelBuilder.Entity<ReceiptItem>()
+            .HasOne(r => r.Receipt)
+            .WithMany(r => r.ReceiptItem)
+            .HasForeignKey(r => r.ReceiptId)
+            .OnDelete(DeleteBehavior.Cascade); 
+    }
 }
 

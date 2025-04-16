@@ -85,16 +85,20 @@ namespace Project1.Migrations
 
             modelBuilder.Entity("ReceiptItem", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("ReceiptId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ReceiptId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ItemName")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("Id");
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
-                    b.HasIndex("ReceiptId");
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReceiptId", "ItemName");
 
                     b.ToTable("ReceiptItems");
                 });
@@ -139,9 +143,13 @@ namespace Project1.Migrations
 
             modelBuilder.Entity("ReceiptItem", b =>
                 {
-                    b.HasOne("Receipt", null)
+                    b.HasOne("Receipt", "Receipt")
                         .WithMany("ReceiptItem")
-                        .HasForeignKey("ReceiptId");
+                        .HasForeignKey("ReceiptId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Receipt");
                 });
 
             modelBuilder.Entity("Visit", b =>
