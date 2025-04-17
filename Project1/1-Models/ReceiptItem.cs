@@ -22,9 +22,9 @@ public class ReceiptItem
     
 
     [Precision(18,2)]
-    public decimal? Price { get; set; }
+    public decimal Price { get; set; } = 0.0M;
 
-    public int? Quantity { get; set; }
+    public int Quantity { get; set; } = 0;
 
     public ReceiptItem(){} 
 

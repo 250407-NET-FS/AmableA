@@ -1,4 +1,4 @@
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 using Microsoft.EntityFrameworkCore;
 using Project1.Models;
 
@@ -78,6 +78,21 @@ public class ReceiptRepository : IReceiptRepository
         .Where(r => r.VisitId == id)
         .ToListAsync();
 
+    }
+
+    //ask if this is the right place
+    public async Task<Customer> GetCustomerFromReceipt(Guid receiptId)
+    {
+
+        //The receipt will include the visit which then will include the customer
+        var receipt = await _context.Receipts
+                                .Include(r => r.Visit)    
+                                .ThenInclude(v => v.Customer)  
+                                .FirstAsync(r => r.Id == receiptId);
+
+        
+        
+        return receipt.Visit.Customer;
     }
 
 

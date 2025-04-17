@@ -14,16 +14,6 @@ public class Customer{
 
     public Customer(){}
 
-    //ToDo refactor it out since theres getter and setters all over
-    public Customer(string phone, string first, string last, string? middle = null){
-        
-        FName = first;
-        MName = middle;
-        LName = last;
-        PhoneNumber = phone;
-
-    }
-
 
 
 }

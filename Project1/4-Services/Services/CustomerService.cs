@@ -1,14 +1,15 @@
 using Project1.Models;
 using Project1.DTOs;
 
+namespace Project1.Services;
 public class CustomerService : ICustomerService{
-    private readonly ICustomerRepository _custmerRepository;
+    private readonly ICustomerRepository _customerRepository;
 
     public CustomerService(
         ICustomerRepository customerRepository
     )
     {
-        _custmerRepository = customerRepository;
+        _customerRepository = customerRepository;
     }
 
 

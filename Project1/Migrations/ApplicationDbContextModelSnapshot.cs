@@ -56,7 +56,7 @@ namespace Project1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("TotalAmount")
+                    b.Property<decimal?>("TotalAmount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
@@ -78,11 +78,11 @@ namespace Project1.Migrations
                     b.Property<string>("ItemName")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<decimal?>("Price")
+                    b.Property<decimal>("Price")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("Quantity")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.HasKey("ReceiptId", "ItemName");

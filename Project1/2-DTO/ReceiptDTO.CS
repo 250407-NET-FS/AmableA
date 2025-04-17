@@ -7,5 +7,9 @@ public class ReceiptDTO{
     //since not interacting with database i should be ok not doing precision?
     public decimal? TotalAmount { get; set; }
 
+
+    //to be used after rebate
+    public decimal? Rebate { get; set; }
+
     public List<ReceiptItemDTO>  ReceiptItemDTOs { get; set; } = [];
 }

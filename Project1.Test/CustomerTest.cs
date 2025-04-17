@@ -10,7 +10,7 @@ public class CustomerTest
     private readonly ApplicationDbContext _mockContext;
     private readonly CustomerRepository _customerRepository;
 
-    Customer validCustomer = new Customer("5555555555", "John", "Doe");
+    Customer validCustomer = new Customer{PhoneNumber = "5555555555", FName = "John", LName= "Doe"};
 
 
     public CustomerTest()

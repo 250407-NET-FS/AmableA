@@ -22,6 +22,14 @@ public class CustomerRepository : ICustomerRepository
         return toAdd;
 
     }
+    public async Task<Customer> UpdateCustomer(Customer toUpdate)
+    {
+        _context.Customers.Update(toUpdate);
+        await _context.SaveChangesAsync();
+
+        return toUpdate;
+
+    }
 
      public async Task<List<Customer>> PostListOfCustomer(List<Customer> customers){
             
@@ -44,3 +52,7 @@ public class CustomerRepository : ICustomerRepository
     }
 
 }
+
+
+
+

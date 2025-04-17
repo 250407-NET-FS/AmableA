@@ -2,6 +2,7 @@ using Project1.Models;
 using Microsoft.EntityFrameworkCore;
 using Project1.Repositories;
 using Project1.DTOs;
+using Project1.Services;
 
 
 
@@ -32,7 +33,9 @@ builder.Services.AddScoped<IStoreRepository, StoreRepository>();
 builder.Services.AddScoped<IVisitRepository, VisitRepository>();
 builder.Services.AddScoped<IReceiptRepository, ReceiptRepository>();
 builder.Services.AddScoped<IReceiptItemRepository, ReceiptItemRepository>();
-
+builder.Services.AddScoped<IReceiptService, ReceiptService>();
+builder.Services.AddScoped<ILoyaltyBenefitsService, LoyaltyBenefitsSerivce>();
+builder.Services.AddScoped<ILoyaltyPointService, LoyaltyPointService>();
 
 
 
@@ -137,7 +140,9 @@ app.MapGet("/customer/{id}", async (ICustomerRepository customerRepository, stri
             FName = obtainedCustomer.FName,
             MName = obtainedCustomer.MName,
             LName = obtainedCustomer.LName,
-            PhoneNumber = obtainedCustomer.PhoneNumber
+            PhoneNumber = obtainedCustomer.PhoneNumber,
+            LoyaltyPoints = obtainedCustomer.LoyaltyPoints,
+            LoyaltyStatus = obtainedCustomer.Status
         };
         return Results.Ok(customerDto);
     }
@@ -162,7 +167,9 @@ app.MapGet("/customer", async (ICustomerRepository customerRepository) =>
         FName = c.FName,
         MName = c.MName,
         LName = c.LName,
-        PhoneNumber = c.PhoneNumber
+        PhoneNumber = c.PhoneNumber,
+        LoyaltyPoints = c.LoyaltyPoints,
+        LoyaltyStatus = c.Status
     }).ToList();
 
     return customerDtos.Count != 0 ? Results.Ok(customerDtos) : Results.NoContent();
@@ -402,83 +409,25 @@ app.MapGet("/visit_by_store/{id}", async (IVisitRepository visitRepository, int 
 
 //Single receipt with possibility of many items, so... a normal receipt 
 //Is it ok to be calling two different methods in the if case?
-app.MapPost("/receipt", async (IReceiptRepository receiptRepository, IReceiptItemRepository receiptItemRepository, Receipt receipt) =>
+app.MapPost("/receipt", async (IReceiptService receiptService, Receipt receipt) =>
 {
 
-    if (receipt.ReceiptItem.Count > 0)
+    //logic got out of hand put it in service layer
+    ReceiptDTO receiptDTO = await receiptService.SetReceipt(receipt);
+
+    if (receiptDTO != null)
     {
-        //List<ReceiptItem> items = receipt.ReceiptItem;
-        //This creates a shallow copy and the clear later will clear it and thus it will be an empty list 
-        //So i need to make a deep copy... 2 hours cause i forgot such a simplething....
-
-        List<ReceiptItem> items = receipt.ReceiptItem
-        .Select(item => new ReceiptItem
-        {
-            ItemName = item.ItemName,
-            Price = item.Price,
-            Quantity = item.Quantity,
-            ReceiptId = item.ReceiptId
-        }).ToList();
-
-
-        receipt.ReceiptItem.Clear(); //making it empty so that I can add them separetly
-
-        var persistedReceipt = await receiptRepository.PostReceipt(receipt);
-
-        if (persistedReceipt != null)
-        {
-
-
-            var persistedReceiptItem = await receiptItemRepository.PostReceiptItem(persistedReceipt.Id, items);
-
-
-            var receiptItemDTOs = items.Select(r => new ReceiptItemDTO
-            {
-                ItemName = r.ItemName,
-                Price = r.Price,
-                Quantity = r.Quantity,
-            }).ToList();
-
-
-
-            ReceiptDTO receiptDTO = new ReceiptDTO
-            {
-                Id = persistedReceipt.Id,
-                VisitId = persistedReceipt.VisitId,
-                ReceiptItemDTOs = receiptItemDTOs,
-                TotalAmount = persistedReceipt.TotalAmount
-
-            };
-
-            return Results.Created($"/receipt/{receiptDTO.Id}", receiptDTO);
-        }
-        else
-        {
-            return Results.BadRequest($"Creation Failed");
-        }
-
+        return Results.Created($"/receipt/{receiptDTO.Id}", receiptDTO);
     }
     else
     {
-        var persistedReceipt = await receiptRepository.PostReceipt(receipt);
-
-        ReceiptDTO receiptDTO = new ReceiptDTO
-        {
-            Id = persistedReceipt.Id,
-            VisitId = persistedReceipt.VisitId,
-            TotalAmount = persistedReceipt.TotalAmount
-        };
-
-        if (receiptDTO != null)
-        {
-            return Results.Created($"/receipt/{receiptDTO.Id}", receiptDTO);
-        }
-        else
-        {
-            return Results.BadRequest($"Creation Failed");
-        }
+        return Results.BadRequest($"Creation Failed");
     }
-});
+}
+);
+
+
+// app.MapGet("/receipt")
 
 
 

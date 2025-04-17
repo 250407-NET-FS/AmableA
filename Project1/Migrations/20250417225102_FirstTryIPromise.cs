@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Project1.Migrations
 {
     /// <inheritdoc />
-    public partial class fixedReceiptItems : Migration
+    public partial class FirstTryIPromise : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,9 @@ namespace Project1.Migrations
                     FName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LoyaltyPoints = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,8 +49,8 @@ namespace Project1.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     StoreId = table.Column<int>(type: "int", nullable: false),
-                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PointsAccumulated = table.Column<int>(type: "int", nullable: false)
+                    VisitDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PointsAccumulated = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -73,7 +75,7 @@ namespace Project1.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     VisitId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false)
+                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true)
                 },
                 constraints: table =>
                 {

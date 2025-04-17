@@ -19,5 +19,7 @@ public interface IReceiptRepository{
 
     Task<List<Receipt>> GetAllReceiptsByVisit(Guid id);
 
+    Task<Customer> GetCustomerFromReceipt(Guid receiptId);
+
 
 }

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Project1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250416211728_Iwanttocry")]
-    partial class Iwanttocry
+    [Migration("20250417225102_FirstTryIPromise")]
+    partial class FirstTryIPromise
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,7 +59,7 @@ namespace Project1.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("TotalAmount")
+                    b.Property<decimal?>("TotalAmount")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
@@ -81,11 +81,11 @@ namespace Project1.Migrations
                     b.Property<string>("ItemName")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<decimal?>("Price")
+                    b.Property<decimal>("Price")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("Quantity")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.HasKey("ReceiptId", "ItemName");

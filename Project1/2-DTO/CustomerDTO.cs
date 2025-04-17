@@ -9,6 +9,7 @@ public class CustomerDTO
     public string? MName { get; set; }
     public string? LName { get; set; }
     public string? PhoneNumber { get; set; }
-
+    
     public LoyaltyStatus? LoyaltyStatus { get; set; }
+    public int? LoyaltyPoints { get; set; }
 }

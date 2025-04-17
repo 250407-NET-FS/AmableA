@@ -17,7 +17,7 @@ public class Receipt
     //https://stackoverflow.com/questions/71114340/ef-core-6-decimal-precision-warning
 
     [Precision(18, 2)]
-    public decimal TotalAmount { get; set; }
+    public decimal? TotalAmount { get; set; }
 
 
 
