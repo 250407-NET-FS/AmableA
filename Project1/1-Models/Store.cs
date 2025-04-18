@@ -14,12 +14,5 @@ public class Store
 
 
     public Store() { }
-    public Store(int number, string address, string phone)
-    {
 
-        StoreNumber = number;
-        Address = address;
-        PhoneNumber = phone;
-
-    }
 }

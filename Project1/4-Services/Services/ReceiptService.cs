@@ -68,10 +68,7 @@ public class ReceiptService : IReceiptService
             if (persistedReceipt != null)
             {
 
-
                 var persistedReceiptItem = await _receiptItemRepository.PostReceiptItem(persistedReceipt.Id, items);
-
-
 
                 var receiptItemDTOs = items.Select(r => new ReceiptItemDTO
                 {
@@ -80,11 +77,9 @@ public class ReceiptService : IReceiptService
                     Quantity = r.Quantity,
                 }).ToList();
 
-
                 ReceiptDTO receiptDTO = await _loyaltyBenefitsService.CalculateRebate(receipt);
 
                 receiptDTO.ReceiptItemDTOs = receiptItemDTOs;
-
 
                 return receiptDTO;
 

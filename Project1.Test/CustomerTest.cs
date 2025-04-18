@@ -29,7 +29,7 @@ public class CustomerTest
         _customerRepository = new CustomerRepository(_mockContext);
     }
     [Fact]
-    public async Task TestCustomerCreationSuccess()
+    public async Task TestCreationSuccess()
     {
 
         //Arrange
@@ -46,7 +46,7 @@ public class CustomerTest
 
     }
     [Fact]
-    public async Task TestCustomerRetrivalSuccess()
+    public async Task TestRetrivalSuccess()
     {
         //Arrange
         _mockRepository.Setup(r => r.GetCustomer(validCustomer.Id)).ReturnsAsync(validCustomer);
@@ -62,7 +62,7 @@ public class CustomerTest
         Assert.Equal(validCustomer.PhoneNumber, retrievedCustomer.PhoneNumber);
     }
         [Fact]
-        public async Task TestCustomerRetrivalFailureIdNotFound()
+        public async Task TestRetrivalFailureIdNotFound()
     {
         //Arrange
         var invalidId = Guid.NewGuid();
