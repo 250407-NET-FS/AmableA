@@ -1,0 +1,10 @@
+The entities should be
+Stores with a composite / tuple primary key of Company and Store number, (unique) address, and a phone number with stretch to add multiple phone numbers to a single store.
+
+
+Customer will have a GUUID FName, Optional MName, LName, should have optional address and phone number.
+
+The relationship should be 
+Store to Customer Many to Many
+Employee to Store Many to One
+Many items to Many stores, but each store having a different number of items.
