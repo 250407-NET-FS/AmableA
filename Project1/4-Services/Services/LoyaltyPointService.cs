@@ -59,10 +59,6 @@ public class LoyaltyPointService : ILoyaltyPointService
         {
             loyaltyLevel = LoyaltyStatus.Platinum;
         }
-        else if (totalPoints < 50000)
-        {
-            loyaltyLevel = LoyaltyStatus.Diamond;
-        }
         else
         {
             loyaltyLevel = LoyaltyStatus.Diamond;
