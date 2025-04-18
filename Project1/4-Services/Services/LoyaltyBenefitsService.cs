@@ -28,7 +28,7 @@ public class LoyaltyBenefitsSerivce : ILoyaltyBenefitsService{
 
         decimal totalAmount = (decimal)receipt.TotalAmount;
         
-        decimal newAmount = 0.00m;
+        decimal newAmount = totalAmount;
 
         if (loyaltyStatus == LoyaltyStatus.Bronze){
             newAmount = totalAmount -(totalAmount * 0.10m);
@@ -51,10 +51,10 @@ public class LoyaltyBenefitsSerivce : ILoyaltyBenefitsService{
 
         Id = receipt.Id,
         VisitId = receipt.VisitId,
-
         TotalAmount = newAmount,
         Rebate = totalAmount - newAmount  
         };
+
         customer.LoyaltyPoints = (int)await _loyaltyPointService.CalculateTotalLoyaltyPoints(customer.Id);
         
         _loyaltyPointService.SetLoyaltyStatus(customer);
