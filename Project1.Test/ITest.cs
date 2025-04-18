@@ -5,6 +5,8 @@ public interface ITest{
 
     Task TestRetrivalFailureIdNotFound();
 
+    Task TestDeleteSuccess();
+
     //remember the inheritors can extend this and create their own thing
 
 }

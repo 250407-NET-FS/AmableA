@@ -10,7 +10,7 @@ public class CustomerTest
     private readonly ApplicationDbContext _mockContext;
     private readonly CustomerRepository _customerRepository;
 
-    Customer validCustomer = new Customer{PhoneNumber = "5555555555", FName = "John", LName= "Doe"};
+    Customer validCustomer = new Customer { PhoneNumber = "5555555555", FName = "John", LName = "Doe" };
 
 
     public CustomerTest()
@@ -61,20 +61,34 @@ public class CustomerTest
         Assert.Equal(validCustomer.LName, retrievedCustomer.LName);
         Assert.Equal(validCustomer.PhoneNumber, retrievedCustomer.PhoneNumber);
     }
-        [Fact]
-        public async Task TestRetrivalFailureIdNotFound()
+    [Fact]
+    public async Task TestRetrivalFailureIdNotFound()
     {
         //Arrange
         var invalidId = Guid.NewGuid();
         _mockRepository.Setup(r => r.GetCustomer(invalidId)).ReturnsAsync((Customer)null);
 
         // Act
-        
+
         var retrievedCustomer = await _mockRepository.Object.GetCustomer(validCustomer.Id);
 
         // Assert
         Assert.Null(retrievedCustomer);
 
     }
+    [Fact]
+    public async Task TestDeleteSuccess()
+    {
+        //Arrange
+        _mockRepository.Setup(c => c.GetCustomer(validCustomer.Id)).ReturnsAsync(validCustomer);
+        _mockRepository.Setup(v => v.DeleteCustomer(validCustomer.Id)).ReturnsAsync(true);
 
+
+        //Act
+        var deletedSuccess = await _mockRepository.Object.DeleteCustomer(validCustomer.Id);
+
+        //Assert
+        Assert.True(deletedSuccess);
+    }
+    
 }

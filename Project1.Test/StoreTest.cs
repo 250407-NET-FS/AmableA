@@ -81,6 +81,21 @@ public class StoreTest : ITest
         Assert.Null(retrievedStore);
 
     }
+        [Fact]
+
+        public async Task TestDeleteSuccess()
+        {
+        //Arrange
+        _mockRepository.Setup(s => s.GetStore(validStore.StoreNumber)).ReturnsAsync(validStore);
+        _mockRepository.Setup(s => s.DeleteStore(validStore.StoreNumber)).ReturnsAsync(true);
+
+
+        //Act
+        var deletedSuccess = await _mockRepository.Object.DeleteStore(validStore.StoreNumber);
+
+        //Assert
+        Assert.True(deletedSuccess);
+        }
 
 }
 //Store validStore = new Store{StoreNumber = 0, Address = "valid address", PhoneNumber = "valid phone"}

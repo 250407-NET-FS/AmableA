@@ -50,6 +50,7 @@ public class VisitTest : ITest
         Assert.Equal(validVisit.VisitDate, createdVisit.VisitDate);
         Assert.Equal(0, createdVisit.PointsAccumulated);
     }
+    [Fact]
     public async Task TestRetrivalSuccess()
     {
         //Arrange
@@ -66,7 +67,7 @@ public class VisitTest : ITest
         Assert.Equal(validVisit.VisitDate, retrievedVisit.VisitDate);
         Assert.Equal(validVisit.PointsAccumulated, retrievedVisit.PointsAccumulated);
     }
-
+    [Fact]
     public async Task TestRetrivalFailureIdNotFound()
     {
         //Arrange
@@ -79,5 +80,19 @@ public class VisitTest : ITest
 
         // Assert
         Assert.Null(retrievedVisit);
+    }
+    [Fact]
+    public async Task TestDeleteSuccess()
+    {
+        //Arrange
+        _mockRepository.Setup(v => v.GetVisit(validVisit.Id)).ReturnsAsync(validVisit);
+        _mockRepository.Setup(v => v.DeleteVisit(validVisit.Id)).ReturnsAsync(true);
+
+
+        //Act
+        var deletedSuccess = await _mockRepository.Object.DeleteVisit(validVisit.Id);
+
+        //Assert
+        Assert.True(deletedSuccess);
     }
 }

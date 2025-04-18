@@ -13,7 +13,7 @@ public class ReceiptTest : ITest
 
     private readonly ReceiptRepository _receiptRepository;
 
-    Receipt validReceipt = new Receipt{ VisitId = Guid.NewGuid(), TotalAmount = 10.0m };
+    Receipt validReceipt = new Receipt { VisitId = Guid.NewGuid(), TotalAmount = 10.0m };
 
     public ReceiptTest()
     {
@@ -47,7 +47,7 @@ public class ReceiptTest : ITest
         Assert.Equal(validReceipt.VisitId, createdReceipt.VisitId);
         Assert.Equal(10.0m, createdReceipt.TotalAmount);
         Assert.Equal(validReceipt.ReceiptItem, createdReceipt.ReceiptItem);
-    } 
+    }
 
     [Fact]
     public async Task TestRetrivalSuccess()
@@ -79,6 +79,20 @@ public class ReceiptTest : ITest
         // Assert
         Assert.Null(retrievedReceipt);
     }
+    [Fact]
+    public async Task TestDeleteSuccess()
+    {
+        //Arrange
+        _mockRepository.Setup(r => r.GetReceipt(validReceipt.Id)).ReturnsAsync(validReceipt);
+        _mockRepository.Setup(r => r.DeleteReceipt(validReceipt.Id)).ReturnsAsync(true);
 
+
+    //Act
+    var deletedSuccess = await _mockRepository.Object.DeleteReceipt(validReceipt.Id);
+
+    //Assert
+    Assert.True(deletedSuccess);
+    }
+    
     
 }
