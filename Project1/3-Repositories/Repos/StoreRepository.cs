@@ -42,7 +42,17 @@ public class StoreRepository : IStoreRepository
         return await _context.Stores.ToListAsync();
     }
 
-
+    public async Task<bool> DeleteStore(int id)
+    {
+        var store = await GetStore(id);
+        if (store != null)
+        {
+            _context.Stores.Remove(store);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        return false;
+    }
 
 
 }

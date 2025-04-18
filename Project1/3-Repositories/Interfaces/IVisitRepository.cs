@@ -12,4 +12,6 @@ public interface IVisitRepository{
     Task<List<Visit>> GetAllVisitsByCustomerId(Guid id);
 
     Task<List<Visit>> GetAllVisitsByStoreId(int id);
+
+    Task<bool> DeleteVisit(Guid id);
 }

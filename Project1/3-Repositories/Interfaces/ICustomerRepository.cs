@@ -9,5 +9,5 @@ public interface ICustomerRepository
     Task<Customer> UpdateCustomer(Customer toUpdate);
     Task<List<Customer>> GetAllCustomers();
 
-    
+    Task<bool> DeleteCustomer(Guid id);
 }

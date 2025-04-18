@@ -53,5 +53,15 @@ public class VisitRepository : IVisitRepository
         throw new NotImplementedException();
     }
 
-    
+        public async Task<bool> DeleteVisit(Guid id)
+    {
+        var visit = await GetVisit(id);
+        if (visit != null)
+        {
+            _context.Visits.Remove(visit); 
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        return false;
+    }
 }

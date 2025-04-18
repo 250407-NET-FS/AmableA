@@ -31,8 +31,9 @@ public class CustomerRepository : ICustomerRepository
 
     }
 
-     public async Task<List<Customer>> PostListOfCustomer(List<Customer> customers){
-            
+    public async Task<List<Customer>> PostListOfCustomer(List<Customer> customers)
+    {
+
         await _context.Customers.AddRangeAsync(customers);
         await _context.SaveChangesAsync();
 
@@ -51,7 +52,19 @@ public class CustomerRepository : ICustomerRepository
         return await _context.Customers.ToListAsync();
     }
 
+    public async Task<bool> DeleteCustomer(Guid id)
+    {
+        var customer = await GetCustomer(id);
+        if (customer != null)
+        {
+            _context.Customers.Remove(customer); 
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        return false;
+    }
 }
+
 
 
 

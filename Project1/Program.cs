@@ -175,6 +175,19 @@ app.MapGet("/customer", async (ICustomerRepository customerRepository) =>
     return customerDtos.Count != 0 ? Results.Ok(customerDtos) : Results.NoContent();
 
 });
+
+app.MapDelete("/customer/{id}", async (ICustomerRepository customerRepository, string id) =>
+{
+    if (!Guid.TryParse(id, out var parseId))
+    {
+        return Results.BadRequest("Not a valid GUID.");
+    }
+
+    bool success = await customerRepository.DeleteCustomer(parseId);
+
+    return success ? Results.Ok("Deleted successfully") : Results.BadRequest("Failed at deleting");
+
+});
 //End--Customer
 
 
@@ -261,6 +274,16 @@ app.MapGet("/store", async (IStoreRepository storeRepository) =>
     }).ToList();
 
     return storeDtos.Count != 0 ? Results.Ok(listOfStores) : Results.NoContent();
+
+});
+
+app.MapDelete("/store/{id}", async (IStoreRepository storeRepository, int id) =>
+{
+
+
+    bool success = await storeRepository.DeleteStore(id);
+
+    return success ? Results.Ok("Deleted successfully") : Results.BadRequest("Failed at deleting");
 
 });
 //----End Store
@@ -403,6 +426,19 @@ app.MapGet("/visit_by_store/{id}", async (IVisitRepository visitRepository, int 
 
 });
 
+app.MapDelete("/visit/{id}", async (IVisitRepository visitRepository, string id) =>
+{
+    if (!Guid.TryParse(id, out var parseId))
+    {
+        return Results.BadRequest("Not a valid GUID.");
+    }
+
+    bool success = await visitRepository.DeleteVisit(parseId);
+
+    return success ? Results.Ok("Deleted successfully") : Results.BadRequest("Failed at deleting");
+
+});
+
 //End Visits
 
 //Start Receipts
@@ -427,7 +463,30 @@ app.MapPost("/receipt", async (IReceiptService receiptService, Receipt receipt) 
 );
 
 
-// app.MapGet("/receipt")
+app.MapGet("/receipt/{id}", async (IReceiptRepository receiptRepository, string id) =>
+{
+    if (!Guid.TryParse(id, out var parseId))
+    {
+        return Results.BadRequest("Not a valid GUID.");
+    }
+
+    var obtainedReceipt = await receiptRepository.GetReceipt(parseId);
+    
+    if (obtainedReceipt != null)
+    {
+
+        ReceiptDTO receiptDTO = new ReceiptDTO
+        {
+            Id = obtainedReceipt.Id,
+            VisitId = obtainedReceipt.VisitId,
+            TotalAmount = obtainedReceipt.TotalAmount
+        };
+        return Results.Ok(receiptDTO);
+    }
+
+    return Results.NotFound($"No visit was found with Id: {id}");
+
+});
 
 
 
@@ -435,7 +494,18 @@ app.MapPost("/receipt", async (IReceiptService receiptService, Receipt receipt) 
 
 
 
+app.MapDelete("/receipt/{id}", async (IReceiptRepository receiptRepository, string id) =>
+{
+    if (!Guid.TryParse(id, out var parseId))
+    {
+        return Results.BadRequest("Not a valid GUID.");
+    }
 
+    bool success = await receiptRepository.DeleteReceipt(parseId);
+
+    return success ? Results.Ok("Deleted successfully") : Results.BadRequest("Failed at deleting");
+
+});
 //End Receipts
 
 

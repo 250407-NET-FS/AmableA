@@ -21,5 +21,7 @@ public interface IReceiptRepository{
 
     Task<Customer> GetCustomerFromReceipt(Guid receiptId);
 
+    Task<bool> DeleteReceipt(Guid id);
+
 
 }

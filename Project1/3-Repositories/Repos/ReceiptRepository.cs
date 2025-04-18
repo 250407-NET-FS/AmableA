@@ -86,15 +86,25 @@ public class ReceiptRepository : IReceiptRepository
 
         //The receipt will include the visit which then will include the customer
         var receipt = await _context.Receipts
-                                .Include(r => r.Visit)    
-                                .ThenInclude(v => v.Customer)  
+                                .Include(r => r.Visit)
+                                .ThenInclude(v => v.Customer)
                                 .FirstAsync(r => r.Id == receiptId);
 
-        
-        
+
+
         return receipt.Visit.Customer;
     }
 
-
+    public async Task<bool> DeleteReceipt(Guid id)
+    {
+        var receipt = await GetReceipt(id);
+        if (receipt != null)
+        {
+            _context.Receipts.Remove(receipt);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        return false;
+    }
 
 }

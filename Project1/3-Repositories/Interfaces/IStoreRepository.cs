@@ -8,4 +8,6 @@ public interface IStoreRepository
     Task<List<Store>> GetAllStores();
 
     Task<List<Store>> PostListOfStore(List<Store> stores);
+
+    Task<bool> DeleteStore(int id);
 }

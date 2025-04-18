@@ -8,4 +8,6 @@ public interface IReceiptItemRepository
 
     Task<ReceiptItem?> GetReceiptItem(Guid receiptId, string itemName);
 
+    Task<bool> DeleteReceiptItem(Guid receiptId, string itemName);
+
 }

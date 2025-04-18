@@ -45,5 +45,17 @@ public class ReceiptItemRepository : IReceiptItemRepository
         return await _context.ReceiptItems.FirstOrDefaultAsync(r => r.ReceiptId == receiptId && r.ItemName == itemName);
 
     }
+
+    public async Task<bool> DeleteReceiptItem(Guid receiptId, string itemName)
+    {
+        var receiptItem = await GetReceiptItem(receiptId, itemName);
+        if (receiptItem != null)
+        {
+            _context.ReceiptItems.Remove(receiptItem);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        return false;
+    }
 }
 
