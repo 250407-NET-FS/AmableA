@@ -1,0 +1,15 @@
+SELECT TOP 1
+    t.Name AS TrackName,
+    COUNT(il.TrackID) AS PurchaseCount
+FROM 
+    InvoiceLine il
+JOIN 
+    Invoice i ON il.InvoiceID = i.InvoiceID
+JOIN 
+    Track t ON il.TrackID = t.TrackID
+WHERE 
+    YEAR(i.InvoiceDate) = 2010
+GROUP BY 
+    t.TrackID, t.Name
+ORDER BY 
+    PurchaseCount DESC;

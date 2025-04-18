@@ -24,7 +24,7 @@ public class CustomerRepository : ICustomerRepository
     }
     public async Task<Customer> UpdateCustomer(Customer toUpdate)
     {
-        _context.Customers.Update(toUpdate);
+        _context.Customers.Patch(toUpdate);
         await _context.SaveChangesAsync();
 
         return toUpdate;
